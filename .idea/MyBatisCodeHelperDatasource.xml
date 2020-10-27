@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MyBatisCodeHelperDatasource">
+    <option name="projectProfile">
+      <ProjectProfile>
+        <option name="generatedClassPathList">
+          <list>
+            <option value="E:\GZ2005\SSM\homework-01\src\main\java\com\ybq\homewok\entity" />
+          </list>
+        </option>
+      </ProjectProfile>
+    </option>
+  </component>
+</project>

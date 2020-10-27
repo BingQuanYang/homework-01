@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ybq.homewok.mapper.AddressMapper">
+    <resultMap id="BaseResultMap" type="com.ybq.homewok.entity.Address">
+        <id property="addressId" column="address_id"/>
+        <result property="addressProvince" column="address_province"/>
+        <result property="addressCity" column="address_city"/>
+        <result property="addressCounty" column="address_county"/>
+        <result property="addressDetailed" column="address_detailed"/>
+        <result property="recipientName" column="recipient_name"/>
+        <result property="recipientPhone" column="recipient_phone"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+        <result property="isDel" column="is_del"/>
+    </resultMap>
+    <update id="updateAddress">
+        update address
+        <trim prefix="SET" prefixOverrides=",">
+            <if test="address.recipientName != null">
+                recipient_name=#{address.recipientName}
+            </if>
+            <if test="address.recipientPhone != null">
+                ,recipient_phone=#{address.recipientPhone}
+            </if>
+            <if test="address.addressProvince != null">
+                ,address_province=#{address.addressProvince}
+            </if>
+            <if test="address.addressCity != null">
+                ,address_city=#{address.addressCity}
+            </if>
+            <if test="address.addressCounty != null">
+                ,address_county=#{address.addressCounty}
+            </if>
+            <if test="address.addressDetailed != null">
+                ,address_detailed=#{address.addressDetailed}
+            </if>
+        </trim>
+        where address_id = #{address.addressId}
+    </update>
+    <update id="deleteAddressById">
+        update address
+        set is_del=1
+        where address_id = #{addressId}
+    </update>
+    <update id="updateStatusByUserId">
+        update address
+        set status=0
+        where user_id = #{userId}
+    </update>
+    <update id="updateStatusById">
+        update address
+        set status=#{status}
+        where address_id = #{addressId}
+    </update>
+    <insert id="insertAddress">
+        insert into address(recipient_name, recipient_phone, address_province, address_city, address_detailed, user_id,
+                            address_county)
+        values (#{address.recipientName}, #{address.recipientPhone}, #{address.addressProvince}, #{address.addressCity},
+                #{address.addressDetailed}, #{address.userId}, #{address.addressCounty});
+    </insert>
+</mapper>
