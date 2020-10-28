@@ -25,6 +25,7 @@ public class AddressManagementController extends HttpServlet {
     public static final String ADD_ADDRESS = "addAddress";
     public static final String SET_DEFAULT_ADDRESS = "setDefaultAddress";
     public static final String USER_ID = "userId";
+    public static final String ADDRESS_ID = "addressId";
     public static final String RECIPIENT_NAME = "recipientName";
     public static final String RECIPIENT_PHONE = "recipientPhone";
     public static final String ADDRESS_PROVINCE = "addressProvince";
@@ -38,6 +39,7 @@ public class AddressManagementController extends HttpServlet {
         try {
             String action = request.getParameter(ACTION);
             String userId = null;
+            String addressId = null;
             String recipientName = null;
             String recipientPhone = null;
             String addressProvince = null;
@@ -88,6 +90,32 @@ public class AddressManagementController extends HttpServlet {
                         entity.setMsg(Message.SUCCESS);
                         entity.setStatus(Status.SUCCESS);
                     } else {
+                        entity.setMsg(Message.ERROR);
+                        entity.setStatus(Status.ERROR);
+                    }
+                    break;
+                case SET_DEFAULT_ADDRESS:
+                    addressId = request.getParameter(ADDRESS_ID);
+                    userId = request.getParameter(USER_ID);
+                    if (addressId != null && userId != null) {
+                        User data = service.setDefaultAddress(Integer.valueOf(addressId), Integer.valueOf(userId));
+                        entity.setData(data);
+                        entity.setMsg(Message.SUCCESS);
+                        entity.setStatus(Status.SUCCESS);
+                    } else {
+                        entity.setMsg(Message.ERROR);
+                        entity.setStatus(Status.ERROR);
+                    }
+                    break;
+                case DELETE_ADDRESS:
+                    addressId = request.getParameter(ADDRESS_ID);
+                    userId = request.getParameter(USER_ID);
+                    if (addressId != null && userId != null) {
+                        User data = service.deleteAddress(Integer.valueOf(addressId), Integer.valueOf(userId));
+                        entity.setData(data);
+                        entity.setMsg(Message.SUCCESS);
+                        entity.setStatus(Status.SUCCESS);
+                    }else {
                         entity.setMsg(Message.ERROR);
                         entity.setStatus(Status.ERROR);
                     }

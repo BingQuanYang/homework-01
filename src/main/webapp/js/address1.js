@@ -17,44 +17,90 @@ $(function () {
     }
 
     function showAddresses(addresses) {
+        var i = 0;
         for (const address of addresses) {
-            $("#addresses").append(
-                $('<li class="user-addresslist">').append(
-                    $('<span class="new-option-r">').append(
-                        $('<i class="am-icon-check-circle">')
+            if (address.status === 1) {
+                $("#addresses").append(
+                    $('<li class="user-addresslist defaultAddr">').append(
+                        $('<span name="' + address.addressId + '" class="new-option-r">').append(
+                            $('<i class="am-icon-check-circle">')
+                        ).append(
+                            "设为默认"
+                        )
                     ).append(
-                        "设为默认"
-                    )
-                ).append(
-                    $('<p class="new-tit new-p-re">').append(
-                        $('<span class="new-txt">').text(address.recipientName)
+                        $('<p class="new-tit new-p-re">').append(
+                            $('<span class="new-txt">').text(address.recipientName)
+                        ).append(
+                            $('<span class="new-txt-rd2">1').text(address.recipientPhone)
+                        )
                     ).append(
-                        $('<span class="new-txt-rd2">1').text(address.recipientPhone)
-                    )
-                ).append(
-                    $('<div class="new-mu_l2a new-p-re">').append(
-                        $('<p class="new-mu_l2cw">').append(
-                            $('<span class="title">地址：</span>')
+                        $('<div class="new-mu_l2a new-p-re">').append(
+                            $('<p class="new-mu_l2cw">').append(
+                                $('<span class="title">地址：</span>')
+                            ).append(
+                                $('<span class="province">').text(address.addressProvince)
+                            ).append(
+                                $('<span class="city">').text(address.addressCity)
+                            ).append(
+                                $('<span class="dist">').text(address.addressCounty)
+                            ).append(
+                                $('<span class="street">').text(address.addressDetailed)
+                            )
+                        )
+                    ).append(
+                        $('<div class="new-addr-btn">').append(
+                            $('<a href="#"><i class="am-icon-edit"></i>编辑</a>')
                         ).append(
-                            $('<span class="province">').text(address.addressProvince)
+                            $('<span class="new-addr-bar">|</span>')
                         ).append(
-                            $('<span class="city">').text(address.addressCity)
-                        ).append(
-                            $('<span class="dist">').text(address.addressCounty)
-                        ).append(
-                            $('<span class="street">').text(address.addressDetailed)
+                            $('<a name="' + address.addressId + '" href="javascript:void(0); class="del"><i class="am-icon-trash"></i>删除</a>')
                         )
                     )
-                ).append(
-                    $('<div class="new-addr-btn">').append(
-                        $('<a href="#"><i class="am-icon-edit"></i>编辑</a>')
+                );
+            } else {
+                $("#addresses").append(
+                    $('<li class="user-addresslist">').append(
+                        $('<span name="' + address.addressId + '" class="new-option-r">').append(
+                            $('<i class="am-icon-check-circle">')
+                        ).append(
+                            "设为默认"
+                        )
                     ).append(
-                        $('<span class="new-addr-bar">|</span>')
+                        $('<p class="new-tit new-p-re">').append(
+                            $('<span class="new-txt">').text(address.recipientName)
+                        ).append(
+                            $('<span class="new-txt-rd2">1').text(address.recipientPhone)
+                        )
                     ).append(
-                        $('<a href="javascript:void(0);"><i class="am-icon-trash"></i>删除</a>')
+                        $('<div class="new-mu_l2a new-p-re">').append(
+                            $('<p class="new-mu_l2cw">').append(
+                                $('<span class="title">地址：</span>')
+                            ).append(
+                                $('<span class="province">').text(address.addressProvince)
+                            ).append(
+                                $('<span class="city">').text(address.addressCity)
+                            ).append(
+                                $('<span class="dist">').text(address.addressCounty)
+                            ).append(
+                                $('<span class="street">').text(address.addressDetailed)
+                            )
+                        )
+                    ).append(
+                        $('<div class="new-addr-btn">').append(
+                            $('<a href="#"><i class="am-icon-edit"></i>编辑</a>')
+                        ).append(
+                            $('<span class="new-addr-bar">|</span>')
+                        ).append(
+                            $('<a class="del" name="' + address.addressId + '" href="javascript:void(0);"><i class="am-icon-trash"></i>删除</a>')
+                        )
                     )
-                )
-            )
+                );
+            }
+            if (address.status === 1) {
+                $("#addresses > li :eq(" + i + ")").addClass("defaultAddr");
+                $("#addresses > li :eq(" + i + ") > span").text("默认地址");
+            }
+            i++;
         }
     }
 
@@ -93,5 +139,44 @@ $(function () {
                 showAddresses(result.data.addresses);
             }
         })
+    });
+
+    /**
+     *  点击设为默认
+     */
+    $(document).on("click", '.new-option-r', function () {
+        var addressId = $(this).attr("name");
+        let params = {
+            action: "setDefaultAddress",
+            userId: 1,
+            addressId: addressId
+        }
+        $.post(URL, params, function (result) {
+            if (result.status === 200) {
+                // $("#addresses > li").removeClass("defaultAddr");
+                // $(this).parent().addClass("defaultAddr");
+            } else {
+                alert("网路异常")
+            }
+        })
+        $("#addresses > li").removeClass("defaultAddr");
+        $(this).parent().addClass("defaultAddr");
+
+    })
+    $(document).on("click", '.del', function () {
+        var addressId = $(this).attr("name");
+        let params = {
+            action: "deleteAddress",
+            userId: 1,
+            addressId: addressId
+        }
+        $.post(URL, params, function (result) {
+            if (result.status === 200) {
+                // $(this).parent().parent().remove();
+            } else {
+                alert("网路异常")
+            }
+        })
+        $(this).parent().parent().remove();
     })
 })
